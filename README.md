@@ -37,7 +37,25 @@ export default defineNuxtConfig({
 }
 ```
 
-For local development next to the app, run `bun link` in this repository and `bun link @novatron/kit` in the app.
+For live development against a sibling checkout, make the app's `extends` overridable and set the path in the app's local `.env` (never use `bun link`, it rewrites `bun.lock`):
+
+```ts
+extends: [process.env.NOVATRON_KIT_PATH || '@novatron/kit'],
+```
+
+```env
+NOVATRON_KIT_PATH=../kit
+```
+
+The `novatron-db` and `novatron-register` binaries always run from the pinned package.
+
+## Releasing
+
+```bash
+git tag vX.Y.Z && git push origin main vX.Y.Z
+```
+
+Apps upgrade with `bun add github:WoXy-Sensei/novatron-kit#vX.Y.Z` and commit `package.json` with `bun.lock`.
 
 ## Environment
 
