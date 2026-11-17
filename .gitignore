@@ -1,0 +1,68 @@
+# Dependencies & Runtime
+node_modules/
+.pnp
+.pnp.js
+
+# Nuxt / Vue Build Outputs
+.nuxt/
+.output/
+.nitro/
+.cache/
+.data/
+dist/
+dist-ssr/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Supabase CLI Local Runtime Cache (Keep supabase/schemas & supabase/migrations tracked)
+supabase/.temp/
+supabase/.branches/
+
+# Logs & OS
+logs/
+*.log
+.DS_Store
+Thumbs.db
+
+# Deployment & IDE
+.vercel/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# AI Agents, Prompts & Vibe Coding Artifacts (Strictly Ignored)
+GEMINI.md
+gemini.md
+CLAUDE.md
+claude.md
+AGENTS.md
+agents.md
+RULES.md
+rules.md
+DESIGN.md
+design.md
+ARCHITECTURE.md
+architecture.md
+DATABASE.md
+database.md
+AUTH_INTEGRATION.md
+auth_integration.md
+PLAN.md
+plan.md
+PROMPT.md
+prompt.md
+*.ai.md
+.gemini/
+.claude/
+.cursor/
+.windsurf/
+.agent/
+.agents/
+.copilot/
+.aider*
+.cursorrules
+.windsurfrules
+.roorules
