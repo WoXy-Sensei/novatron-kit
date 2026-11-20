@@ -32,6 +32,15 @@
   background-color: rgba(239, 68, 68, 0.08);
 }
 
+.success-box {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  border: 1px solid var(--status-success);
+  color: var(--status-success);
+  background-color: rgba(16, 185, 129, 0.08);
+}
+
 .login-container {
   min-height: 100dvh;
   display: flex;

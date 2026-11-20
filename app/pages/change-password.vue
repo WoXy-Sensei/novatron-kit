@@ -6,6 +6,8 @@ const text = novatron.messages
 useHead({ title: text.changePasswordTitle })
 
 const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+const config = useRuntimeConfig()
 const { metadata } = useAppAccess()
 const signOut = useSignOut()
 
@@ -15,10 +17,12 @@ const currentPassword = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
 const errorMessage = ref('')
+const successMessage = ref('')
 const isSubmitting = ref(false)
 
 async function handleSubmit(): Promise<void> {
   errorMessage.value = ''
+  successMessage.value = ''
 
   if (newPassword.value.length < 8 || newPassword.value.length > 72) {
     errorMessage.value = text.passwordLength
@@ -33,6 +37,10 @@ async function handleSubmit(): Promise<void> {
     return
   }
 
+  const claimsUser = user.value as { email?: string; app_metadata?: { username?: string } } | null
+  const username = claimsUser?.app_metadata?.username
+  const email = claimsUser?.email ?? (username ? `${username}@${config.public.syntheticEmailDomain}` : '')
+
   isSubmitting.value = true
   try {
     await $fetch('/api/_novatron/password', {
@@ -40,9 +48,29 @@ async function handleSubmit(): Promise<void> {
       body: { current_password: currentPassword.value, new_password: newPassword.value },
     })
 
-    // Reload the token so must_change_password is cleared in the claims.
-    await supabase.auth.refreshSession()
-    await navigateTo('/')
+    successMessage.value = text.passwordChanged
+
+    // The server revokes existing sessions on a password change, so the refresh token is usually dead.
+    // Fall back to a fresh sign-in with the new password to obtain a token with updated claims.
+    const refreshed = await supabase.auth.refreshSession()
+    if (refreshed.error || !refreshed.data.session) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password: newPassword.value })
+      if (signInError) {
+        successMessage.value = ''
+        await supabase.auth.signOut().catch(() => undefined)
+        await navigateTo({ path: '/login', query: { password_changed: '1' } }, { replace: true })
+        return
+      }
+    }
+
+    // Leave only once the client state carries the cleared must_change_password claim.
+    const { data: claims } = await supabase.auth.getClaims()
+    const stillPending = (claims?.claims.app_metadata as { must_change_password?: boolean } | undefined)?.must_change_password === true
+    if (stillPending || metadata.value.must_change_password === true) {
+      reloadNuxtApp({ path: '/', persistState: false })
+      return
+    }
+    await navigateTo('/', { replace: true })
   } catch (error) {
     const failure = error as { statusCode?: number; statusMessage?: string; data?: { statusMessage?: string } }
     const relayed = failure.data?.statusMessage ?? failure.statusMessage ?? ''
@@ -107,6 +135,7 @@ async function handleSubmit(): Promise<void> {
           >
         </label>
 
+        <p v-if="successMessage" class="success-box mono" role="status">{{ successMessage }}</p>
         <p v-if="errorMessage" class="error-box mono" role="alert">{{ errorMessage }}</p>
 
         <button type="submit" class="nv-btn nv-btn-primary submit-btn" :disabled="isSubmitting">

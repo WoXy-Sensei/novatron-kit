@@ -6,6 +6,7 @@ const text = novatron.messages
 useHead({ title: text.signInTitle })
 
 const supabase = useSupabaseClient()
+const route = useRoute()
 const config = useRuntimeConfig()
 
 const username = ref('')
@@ -77,6 +78,7 @@ async function handleSignIn(): Promise<void> {
           >
         </label>
 
+        <p v-if="route.query.password_changed && !errorMessage" class="success-box mono" role="status">{{ text.passwordChangedSignIn }}</p>
         <p v-if="errorMessage" class="error-box mono" role="alert">{{ errorMessage }}</p>
 
         <button type="submit" class="nv-btn nv-btn-primary submit-btn" :disabled="isSubmitting">

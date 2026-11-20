@@ -35,6 +35,8 @@ export default defineAppConfig({
       passwordMismatch: 'Yeni şifre ve tekrarı eşleşmiyor.',
       passwordSameAsCurrent: 'Yeni şifre mevcut şifrenden farklı olmalı.',
       currentPasswordWrong: 'Mevcut şifre hatalı.',
+      passwordChanged: 'Şifren güncellendi, yönlendiriliyorsun…',
+      passwordChangedSignIn: 'Şifren güncellendi. Lütfen yeni şifrenle giriş yap.',
       passwordChangeFailed: 'Şifre değiştirilemedi. Lütfen tekrar dene.',
       passwordRateLimited: 'Çok fazla deneme yaptın. Lütfen biraz sonra tekrar dene.',
     },
