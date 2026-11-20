@@ -5,6 +5,8 @@ import type { NovatronAccess, NovatronJwtMetadata } from '#novatron/types/novatr
 export interface AppAccessOptions {
   permission?: string
   allowedRoles?: string[]
+  /** Skip the first-login password gate. Only for handlers that must work before the password is changed. */
+  allowPasswordChangePending?: boolean
 }
 
 /** Verifies the HQ-issued JWT (JWKS via @nuxtjs/supabase) and this app's role/permission claims. */
@@ -17,7 +19,12 @@ export async function requireAppAccess(event: H3Event, options: AppAccessOptions
     throw createError({ statusCode: 401, statusMessage: text.authRequired })
   }
 
-  const access = resolveAccess(claims.sub, (claims.app_metadata ?? {}) as NovatronJwtMetadata, appId)
+  const metadata = (claims.app_metadata ?? {}) as NovatronJwtMetadata
+  if (metadata.must_change_password === true && !options.allowPasswordChangePending) {
+    throw createError({ statusCode: 403, statusMessage: text.passwordChangeRequired })
+  }
+
+  const access = resolveAccess(claims.sub, metadata, appId)
   if (!access) {
     throw createError({ statusCode: 403, statusMessage: text.accessDenied })
   }

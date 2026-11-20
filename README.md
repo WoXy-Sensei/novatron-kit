@@ -6,13 +6,17 @@ Shared Nuxt layer for Novatron Robotics (FRC 10202) team apps. It connects an ap
 
 | Area | Contents |
 | :--- | :--- |
-| Pages | `/login` (username + password against HQ Supabase Auth), `/unauthorized` |
+| Pages | `/login` (username + password against HQ Supabase Auth), `/unauthorized`, `/change-password` (first-login / voluntary password change) |
 | Client | `novatron-auth.global.ts` route guard, presence heartbeat plugin, `useAppAccess()`, `useSignOut()` |
 | Server | `requireAppAccess(event, { permission })`, `useAppDb<Database>(event)`, `hqFetch(event, path)` |
-| Routes | `POST /api/_novatron/heartbeat`, `POST /api/_novatron/auth-event` (forwarded to HQ API v1) |
+| Routes | `POST /api/_novatron/heartbeat`, `POST /api/_novatron/auth-event` (forwarded to HQ API v1), `POST /api/_novatron/password` (relays to `POST /api/v1/me/password`, rate limited) |
 | Shared | `NovatronJwtMetadata`, `NovatronAppManifest`, `resolveAccess()`, `normalizeRoles()` |
 | CLI | `novatron-db push|status` (per-repo migration history), `novatron-register` (applies `novatron.app.json` to HQ) |
 | Styles | Astryx base, `novatron.css` tokens, sign-in card styles |
+
+### First-login password change
+
+HQ puts `app_metadata.must_change_password` in the access token for members created with a temporary password. While it is `true`, the route guard redirects every page except `/login` and `/change-password` to `/change-password`, and `requireAppAccess()` rejects with 403 (`novatron.messages.passwordChangeRequired`). The page posts to `/api/_novatron/password`, then refreshes the session so the claim clears. Handlers that must work before the change can pass `{ allowPasswordChangePending: true }` to `requireAppAccess`.
 
 User-facing copy lives in `app/app.config.ts` under `novatron.messages` and can be overridden per app.
 

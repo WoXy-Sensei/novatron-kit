@@ -5,6 +5,8 @@ export interface NovatronJwtMetadata {
   app_permissions?: Record<string, string[]>
   username?: string | null
   full_name?: string | null
+  /** True until the member replaces their temporary password (HQ clears it on `POST /api/v1/me/password`). */
+  must_change_password?: boolean
 }
 
 /** Manifest contract v1 (`novatron.app.json`), applied through `PUT /api/v1/apps/{app_key}/manifest`. */

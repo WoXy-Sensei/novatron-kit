@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   // Logout is still recorded for members whose role was revoked mid-session.
   if (action === 'auth.login') {
-    await requireAppAccess(event)
+    await requireAppAccess(event, { allowPasswordChangePending: true })
   }
 
   try {

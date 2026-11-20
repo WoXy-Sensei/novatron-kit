@@ -52,6 +52,13 @@ export default defineNuxtConfig({
     },
   },
 
+  // Password changes verify the current password, so they get a strict budget against guessing.
+  routeRules: {
+    '/api/_novatron/password': {
+      security: { rateLimiter: { tokensPerInterval: 10, interval: 900000, headers: true } },
+    },
+  },
+
   security: {
     rateLimiter: {
       tokensPerInterval: 120,
