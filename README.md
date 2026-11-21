@@ -37,7 +37,7 @@ export default defineNuxtConfig({
 
 ```jsonc
 // package.json
-"dependencies": { "@novatron/kit": "github:WoXy-Sensei/novatron-kit#v1.0.0" },
+"dependencies": { "@novatron/kit": "github:xouyi/novatron-kit#v1.0.0" },
 "scripts": {
   "db:push": "novatron-db push",
   "db:status": "novatron-db status",
@@ -63,7 +63,7 @@ The `novatron-db` and `novatron-register` binaries always run from the pinned pa
 git tag vX.Y.Z && git push origin main vX.Y.Z
 ```
 
-Apps upgrade with `bun remove @novatron/kit && bun add github:WoXy-Sensei/novatron-kit#vX.Y.Z` (a plain `bun add` over an existing entry can duplicate the lockfile key and keep the old commit) and commit `package.json` with `bun.lock`.
+Apps upgrade with `bun remove @novatron/kit && bun add github:xouyi/novatron-kit#vX.Y.Z` (a plain `bun add` over an existing entry can duplicate the lockfile key and keep the old commit) and commit `package.json` with `bun.lock`.
 
 ## Environment
 
