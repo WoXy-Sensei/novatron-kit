@@ -20,6 +20,19 @@ export default defineNuxtConfig({
     '#novatron': resolveLocal('./shared'),
   },
 
+  // Shared brand icons live in kit/public and are merged into every extending app (an app overrides by shipping the same file names).
+  app: {
+    head: {
+      meta: [{ name: 'theme-color', content: '#050505' }],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/x-icon', sizes: '32x32', href: '/favicon.ico' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/site.webmanifest' },
+      ],
+    },
+  },
+
   css: [
     '@astryxdesign-vue/core/style.css',
     resolveLocal('./app/assets/css/novatron.css'),

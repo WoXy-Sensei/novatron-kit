@@ -7,6 +7,8 @@ export interface NovatronJwtMetadata {
   full_name?: string | null
   /** True until the member replaces their temporary password (HQ clears it on `POST /api/v1/me/password`). */
   must_change_password?: boolean
+  /** Department of the member: software, mechanical, electrical, drive, pr or mentor. Absent until HQ ships the hook update. */
+  subteam?: string | null
 }
 
 /** Manifest contract v1 (`novatron.app.json`), applied through `PUT /api/v1/apps/{app_key}/manifest`. */

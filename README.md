@@ -20,6 +20,10 @@ HQ puts `app_metadata.must_change_password` in the access token for members crea
 
 User-facing copy lives in `app/app.config.ts` under `novatron.messages` and can be overridden per app.
 
+### Brand icon
+
+The layer ships a placeholder icon set in `public/` (`favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `site.webmanifest`) and the matching `<head>` links in `nuxt.config.ts`; Nuxt merges `public/` so every extending app serves them, and an app overrides one by shipping the same file name. To change the brand icon: replace `kit/public/*` (same filenames), release a kit tag, bump apps; copy into `hq/public` (HQ does not extend the kit).
+
 ## Usage
 
 ```ts
